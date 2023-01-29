@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Times New Roman</family>
+    <pointsize>12</pointsize>
+    <weight>50</weight>
+    <italic>false</italic>
+    <bold>false</bold>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1200</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_image_dir"/>
+    <addaction name="actionOpen_label_dir"/>
+    <addaction name="separator"/>
+    <addaction name="actionPrior_image"/>
+    <addaction name="actionNext_image"/>
+    <addaction name="separator"/>
+    <addaction name="actionSetting"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionFit_window"/>
+    <addaction name="actionZoom_in"/>
+    <addaction name="actionZoom_out"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionCreate"/>
+    <addaction name="actionCache"/>
+    <addaction name="actionEdit"/>
+    <addaction name="actionDelete"/>
+    <addaction name="actionSave"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionShortcut"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpen_image_dir"/>
+   <addaction name="actionOpen_label_dir"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrior_image"/>
+   <addaction name="actionNext_image"/>
+   <addaction name="separator"/>
+   <addaction name="actionCreate"/>
+   <addaction name="actionEdit"/>
+   <addaction name="actionDelete"/>
+   <addaction name="actionSave"/>
+   <addaction name="separator"/>
+   <addaction name="actionFit_window"/>
+   <addaction name="actionZoom_in"/>
+   <addaction name="actionZoom_out"/>
+  </widget>
+  <widget class="QDockWidget" name="Labels">
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::DefaultContextMenu</enum>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string>Labels Dock</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <property name="leftMargin">
+      <number>3</number>
+     </property>
+     <property name="topMargin">
+      <number>3</number>
+     </property>
+     <property name="rightMargin">
+      <number>3</number>
+     </property>
+     <property name="bottomMargin">
+      <number>3</number>
+     </property>
+     <item>
+      <widget class="QWidget" name="widget" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QCheckBox" name="checkBox_visiable">
+          <property name="statusTip">
+           <string/>
+          </property>
+          <property name="text">
+           <string>Visiable</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QListWidget" name="listWidget_labels"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_add_manually">
+       <property name="statusTip">
+        <string>Add annotation manually.</string>
+       </property>
+       <property name="text">
+        <string>Add Manually</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="Files">
+   <property name="windowTitle">
+    <string>Files Dock</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QListWidget" name="listWidget_files"/>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="lineEdit_jump">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>50</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="statusTip">
+          <string>Jump to the image. Input name or index.</string>
+         </property>
+         <property name="placeholderText">
+          <string>Jump to the image.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_files">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="status_bar"/>
+  <action name="actionOpen_image_dir">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/照片_pic.svg</normaloff>:/icons/icons/照片_pic.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Image dir</string>
+   </property>
+   <property name="statusTip">
+    <string>Open image directory.</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionOpen_label_dir">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/文件夹-开_folder-open.svg</normaloff>:/icons/icons/文件夹-开_folder-open.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Label dir</string>
+   </property>
+   <property name="statusTip">
+    <string>Open xml file directory. This directory will be used to save xml.</string>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/开关_power.svg</normaloff>:/icons/icons/开关_power.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionZoom_in">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/缩小_zoom-out.svg</normaloff>:/icons/icons/缩小_zoom-out.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom in </string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionZoom_out">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/放大_zoom-in.svg</normaloff>:/icons/icons/放大_zoom-in.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom out</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionFit_window">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/等比_equal-ratio.svg</normaloff>:/icons/icons/等比_equal-ratio.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Fit window</string>
+   </property>
+   <property name="statusTip">
+    <string>Resize image to fit window.</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>F</string>
+   </property>
+  </action>
+  <action name="actionCreate">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/编辑撰写_writing-fluently.svg</normaloff>:/icons/icons/编辑撰写_writing-fluently.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Create</string>
+   </property>
+   <property name="statusTip">
+    <string>Create annotation rectangle.</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>C</string>
+   </property>
+  </action>
+  <action name="actionEdit">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/编辑文件_file-editing.svg</normaloff>:/icons/icons/编辑文件_file-editing.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Edit</string>
+   </property>
+   <property name="statusTip">
+    <string>Edit the selected annotation.</string>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>E</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/删除_delete.svg</normaloff>:/icons/icons/删除_delete.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="statusTip">
+    <string>Delect the selected annotation.</string>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/保存_save.svg</normaloff>:/icons/icons/保存_save.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="statusTip">
+    <string>Save current annotation to xml file.</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>S</string>
+   </property>
+  </action>
+  <action name="actionPrior_image">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/上一步_back.svg</normaloff>:/icons/icons/上一步_back.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Prior image</string>
+   </property>
+   <property name="statusTip">
+    <string/>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>A</string>
+   </property>
+  </action>
+  <action name="actionNext_image">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/下一步_next.svg</normaloff>:/icons/icons/下一步_next.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Next image</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>D</string>
+   </property>
+  </action>
+  <action name="actionSetting">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/设置_setting-two.svg</normaloff>:/icons/icons/设置_setting-two.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Setting</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionCache">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/清除_clear.svg</normaloff>:/icons/icons/清除_clear.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Cache</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
+  <action name="actionShortcut">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/键盘_keyboard-one.svg</normaloff>:/icons/icons/键盘_keyboard-one.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Shortcut</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icons/icons/头像_avatar.svg</normaloff>:/icons/icons/头像_avatar.svg</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="icon.qrc"/>
+ </resources>
+ <connections/>
+</ui>
