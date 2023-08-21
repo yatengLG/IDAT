@@ -13,13 +13,13 @@ def load_config(file):
     result = []
     with open(file, 'rb')as f:
         label = yaml.load(f.read(), Loader=yaml.FullLoader)['label']
-    print('label: ', label)
+
     for d in label:
         category = d['name']
         color = d['color']
         label_tuple = CATEGORYTUPLE(category, color)
         result.append(label_tuple)
-    print('result: ', result)
+
     return result
 
 def save_config(labeltuple_list:List[CATEGORYTUPLE], file:str):

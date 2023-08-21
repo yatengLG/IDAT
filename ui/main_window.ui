@@ -101,7 +101,7 @@
     <string>toolBar</string>
    </property>
    <property name="orientation">
-    <enum>Qt::Vertical</enum>
+    <enum>Qt::Horizontal</enum>
    </property>
    <property name="iconSize">
     <size>
@@ -110,10 +110,10 @@
     </size>
    </property>
    <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonTextUnderIcon</enum>
+    <enum>Qt::ToolButtonIconOnly</enum>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -267,9 +267,24 @@
    </widget>
   </widget>
   <widget class="QStatusBar" name="status_bar"/>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="windowTitle">
+    <string>Categories Dock</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QListWidget" name="listWidget_categories"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionOpen_image_dir">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/照片_pic.svg</normaloff>:/icons/icons/照片_pic.svg</iconset>
    </property>
    <property name="text">
@@ -287,7 +302,7 @@
   </action>
   <action name="actionOpen_label_dir">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/文件夹-开_folder-open.svg</normaloff>:/icons/icons/文件夹-开_folder-open.svg</iconset>
    </property>
    <property name="text">
@@ -308,7 +323,7 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/开关_power.svg</normaloff>:/icons/icons/开关_power.svg</iconset>
    </property>
    <property name="text">
@@ -323,7 +338,7 @@
   </action>
   <action name="actionZoom_in">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/缩小_zoom-out.svg</normaloff>:/icons/icons/缩小_zoom-out.svg</iconset>
    </property>
    <property name="text">
@@ -338,7 +353,7 @@
   </action>
   <action name="actionZoom_out">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/放大_zoom-in.svg</normaloff>:/icons/icons/放大_zoom-in.svg</iconset>
    </property>
    <property name="text">
@@ -353,8 +368,8 @@
   </action>
   <action name="actionFit_window">
    <property name="icon">
-    <iconset resource="icon.qrc">
-     <normaloff>:/icons/icons/等比_equal-ratio.svg</normaloff>:/icons/icons/等比_equal-ratio.svg</iconset>
+    <iconset resource="../icon.qrc">
+     <normaloff>:/icons/icons/全宽_fullwidth.svg</normaloff>:/icons/icons/全宽_fullwidth.svg</iconset>
    </property>
    <property name="text">
     <string>Fit window</string>
@@ -374,8 +389,8 @@
   </action>
   <action name="actionCreate">
    <property name="icon">
-    <iconset resource="icon.qrc">
-     <normaloff>:/icons/icons/编辑撰写_writing-fluently.svg</normaloff>:/icons/icons/编辑撰写_writing-fluently.svg</iconset>
+    <iconset resource="../icon.qrc">
+     <normaloff>:/icons/icons/锚点_anchor.svg</normaloff>:/icons/icons/锚点_anchor.svg</iconset>
    </property>
    <property name="text">
     <string>Create</string>
@@ -395,7 +410,7 @@
   </action>
   <action name="actionEdit">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/编辑文件_file-editing.svg</normaloff>:/icons/icons/编辑文件_file-editing.svg</iconset>
    </property>
    <property name="text">
@@ -419,7 +434,7 @@
   </action>
   <action name="actionDelete">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/删除_delete.svg</normaloff>:/icons/icons/删除_delete.svg</iconset>
    </property>
    <property name="text">
@@ -443,7 +458,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/保存_save.svg</normaloff>:/icons/icons/保存_save.svg</iconset>
    </property>
    <property name="text">
@@ -464,7 +479,7 @@
   </action>
   <action name="actionPrior_image">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/上一步_back.svg</normaloff>:/icons/icons/上一步_back.svg</iconset>
    </property>
    <property name="text">
@@ -485,7 +500,7 @@
   </action>
   <action name="actionNext_image">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/下一步_next.svg</normaloff>:/icons/icons/下一步_next.svg</iconset>
    </property>
    <property name="text">
@@ -503,7 +518,7 @@
   </action>
   <action name="actionSetting">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/设置_setting-two.svg</normaloff>:/icons/icons/设置_setting-two.svg</iconset>
    </property>
    <property name="text">
@@ -518,8 +533,8 @@
   </action>
   <action name="actionCache">
    <property name="icon">
-    <iconset resource="icon.qrc">
-     <normaloff>:/icons/icons/清除_clear.svg</normaloff>:/icons/icons/清除_clear.svg</iconset>
+    <iconset resource="../icon.qrc">
+     <normaloff>:/icons/icons/关闭_close-one.svg</normaloff>:/icons/icons/关闭_close-one.svg</iconset>
    </property>
    <property name="text">
     <string>Cache</string>
@@ -536,7 +551,7 @@
   </action>
   <action name="actionShortcut">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset resource="../icon.qrc">
      <normaloff>:/icons/icons/键盘_keyboard-one.svg</normaloff>:/icons/icons/键盘_keyboard-one.svg</iconset>
    </property>
    <property name="text">
@@ -551,8 +566,8 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="icon.qrc">
-     <normaloff>:/icons/icons/头像_avatar.svg</normaloff>:/icons/icons/头像_avatar.svg</iconset>
+    <iconset resource="../icon.qrc">
+     <normaloff>:/icons/icons/我的_me.svg</normaloff>:/icons/icons/我的_me.svg</iconset>
    </property>
    <property name="text">
     <string>About</string>
@@ -566,7 +581,7 @@
   </action>
  </widget>
  <resources>
-  <include location="icon.qrc"/>
+  <include location="../icon.qrc"/>
  </resources>
  <connections/>
 </ui>

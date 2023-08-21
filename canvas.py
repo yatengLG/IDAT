@@ -70,19 +70,34 @@ class Scene(QtWidgets.QGraphicsScene):
     def start_draw(self):
         if self.drawmode != DRAWMode.VIEW:
             return
+        self.mainwindow.label_visiable_checkbox_click(False)
         self.change_draw_to_create()
         self.current_rect = Rect()
         self.addItem(self.current_rect)
 
     def finish_draw(self):
-        self.mainwindow.choice_label_dialog.init()
-        self.mainwindow.choice_label_dialog.show()
+        item = self.mainwindow.listWidget_categories.currentItem()
+        widget = self.mainwindow.listWidget_categories.itemWidget(item)
+        label_category = widget.findChild(QtWidgets.QLabel, 'category')
+        label_color = widget.findChild(QtWidgets.QLabel, 'color')
+        category = label_category.text()
+        color = label_color.text()
+
+        difficult = False
+        self.mainwindow.scene.current_rect.complete(category, color, difficult)
+        self.mainwindow.scene.rects.append(self.mainwindow.scene.current_rect)
+        self.mainwindow.dock_labels_add_label(self.mainwindow.scene.current_rect)
+        self.mainwindow.scene.current_rect = None
+        self.mainwindow.set_changed(True)
+        self.mainwindow.label_visiable_checkbox_click(True)
+
         self.change_draw_to_view()
 
     def cache_draw(self):
         if self.current_rect is not None:
             self.removeItem(self.current_rect)
             self.current_rect:Rect = None
+        self.mainwindow.label_visiable_checkbox_click(True)
         self.change_draw_to_view()
 
     def edit_rect(self):
@@ -177,7 +192,7 @@ class View(QtWidgets.QGraphicsView):
     def zoom(self, factor, point=None):
         mouse_old = self.mapToScene(point) if point is not None else None
         pix_widget = self.transform().scale(factor, factor).mapRect(QtCore.QRectF(0, 0, 1, 1)).width()
-        if pix_widget > 2 or pix_widget < 0.1:
+        if pix_widget > 10 or pix_widget < 0.01:
             return
         self.scale(factor,factor)
         if point is not None:

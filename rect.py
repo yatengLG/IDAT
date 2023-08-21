@@ -62,8 +62,8 @@ class Rect(QtWidgets.QGraphicsRectItem):
         self.is_completed = False
         self.is_difficult = False
         self.color = QtGui.QColor('#000000')
-        self.hover_alpha = 150
-        self.nohover_alpha = 80
+        self.hover_alpha = 80
+        self.nohover_alpha = 0
 
         self.setPen(QtGui.QPen(self.color, 1))
         self.setBrush(QtGui.QBrush(self.color, QtCore.Qt.BrushStyle.FDiagPattern))
@@ -125,8 +125,8 @@ class Rect(QtWidgets.QGraphicsRectItem):
         self.category = category
         self.is_difficult = difficult
         self.color = QtGui.QColor(color)
+        self.setPen(QtGui.QPen(self.color, 1, QtCore.Qt.PenStyle.SolidLine, QtCore.Qt.PenCapStyle.RoundCap))
         self.color.setAlpha(self.nohover_alpha)
-        self.setPen(QtGui.QPen(self.color, 1))
         self.setBrush(self.color)
 
         lt, rb = self.points

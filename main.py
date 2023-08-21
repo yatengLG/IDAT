@@ -314,6 +314,7 @@ class EditLabelDialog(QtWidgets.QDialog, Ui_Dialog_Choice_Label):
         self.rect.category = category
         self.rect.is_difficult = difficult
         self.rect.color = QtGui.QColor(color)
+        self.rect.setPen(QtGui.QPen(self.rect.color, 1, QtCore.Qt.PenStyle.SolidLine, QtCore.Qt.PenCapStyle.RoundCap))
         self.rect.color.setAlpha(self.rect.nohover_alpha)
         self.rect.setBrush(self.rect.color)
         self.rect.redraw()
@@ -459,6 +460,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if os.path.exists('./default.yaml'):
             self.setting_dialog.load_cfg('./default.yaml')
 
+        self.load_category()
+
     def init_gui(self):
         self.setWindowTitle('LG Annotation Tool')
         self.actionPrior_image.setEnabled(False)
@@ -471,6 +474,46 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionZoom_in.setEnabled(False)
         self.actionZoom_out.setEnabled(False)
         self.actionFit_window.setEnabled(False)
+
+    def load_category(self):
+        self.listWidget_categories.clear()
+        label_tuples = self.category_tuples
+        if label_tuples is None:
+            return
+
+        for label_tuple in label_tuples:
+            category = label_tuple.category
+            color = label_tuple.color
+
+            item = QtWidgets.QListWidgetItem()
+            item.setSizeHint(QtCore.QSize(200, 40))
+            widget = QtWidgets.QWidget()
+
+            layout = QtWidgets.QHBoxLayout()
+            layout.setContentsMargins(9, 1, 9, 1)
+
+            label_category = QtWidgets.QLabel()
+            label_category.setText(category)
+            label_category.setObjectName('category')
+
+            button_color = QtWidgets.QLabel()
+            button_color.setStyleSheet('QWidget {background-color: %s}' % color)
+            button_color.setFixedWidth(5)
+
+            label_color = QtWidgets.QLabel()
+            label_color.setText(color)
+            label_color.setVisible(False)
+            label_color.setObjectName('color')
+
+            layout.addWidget(label_color)
+            layout.addWidget(button_color)
+            layout.addWidget(label_category)
+            widget.setLayout(layout)
+
+            self.listWidget_categories.addItem(item)
+            self.listWidget_categories.setItemWidget(item, widget)
+        if len(label_tuples) > 0:
+            self.listWidget_categories.setCurrentRow(0)
 
     def open_image_dir(self):
         dir = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Open image directory')

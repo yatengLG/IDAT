@@ -68,7 +68,7 @@ class Annotations(object):
         annotation.append(filename)
 
         explain = ET.Element('explain')
-        explain.text = '{}'.format('Build by LG Annotation Tool v1.0')
+        explain.text = '{}'.format('Build by IDAT v1.0')
         annotation.append(explain)
 
         size = ET.Element('size')
