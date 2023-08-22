@@ -10,7 +10,10 @@ from ui.about_dialog import Ui_Dialog_About
 from canvas import Scene, View
 from PyQt5 import QtCore, QtWidgets, QtGui
 from utils.file_ops import CATEGORYTUPLE, save_category_cfg, read_category_cfg, save_config, load_config
+from segment_any.segment_any import SegAny
+from segment_any.gpu_resource import GPUResource_Thread, osplatform
 from anno import Annotations, Annotation
+import functools
 from rect import Rect
 import sys
 import os
@@ -435,8 +438,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.view.setScene(self.scene)
         self.setCentralWidget(self.view)
 
+        self.labelGPUResource = QtWidgets.QLabel('')
+        self.labelGPUResource.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        self.labelGPUResource.setFixedWidth(180)
+        self.status_bar.addPermanentWidget(self.labelGPUResource)
+
         self.labelCoordinates = QtWidgets.QLabel('')
         self.status_bar.addPermanentWidget(self.labelCoordinates)
+
         self.setting_dialog = SettingDialog(self, self)
         self.shortcut_dialog = ShortcutDialog(self)
         self.about_dialog = AboutDialog(self)
@@ -447,11 +456,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.files_root = None
         self.labels_root = None
         self.files_list = []
-        self.current_index = 0
-        self.pixmap:QtGui.QPixmap = None
+        self.current_index = None
         self.xml_path:str = None
         self.category_tuples = []
         self.is_changed = False
+
+        self.use_segment_anything = False
+        self.gpu_resource_thread = None
 
         self.init_gui()
         self.connect()
@@ -467,6 +478,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionPrior_image.setEnabled(False)
         self.actionNext_image.setEnabled(False)
         self.actionCreate.setEnabled(False)
+        self.actionSegment_any.setEnabled(False)
+        self.actionFinish_draw.setEnabled(False)
         self.actionCache.setEnabled(False)
         self.actionEdit.setEnabled(False)
         self.actionDelete.setEnabled(False)
@@ -474,6 +487,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionZoom_in.setEnabled(False)
         self.actionZoom_out.setEnabled(False)
         self.actionFit_window.setEnabled(False)
+
+
+        model_names = sorted([pth for pth in os.listdir('segment_any') if pth.endswith('.pth') or pth.endswith('.pt')])
+        self.pths_actions = {}
+        for model_name in model_names:
+            action = QtWidgets.QAction(self)
+            action.setObjectName("actionZoom_in")
+            action.triggered.connect(functools.partial(self.init_segment_anything, model_name))
+            action.setText("{}".format(model_name))
+            action.setCheckable(True)
+
+            self.pths_actions[model_name] = action
+            self.menuSAM_model.addAction(action)
 
     def load_category(self):
         self.listWidget_categories.clear()
@@ -514,6 +540,43 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.listWidget_categories.setItemWidget(item, widget)
         if len(label_tuples) > 0:
             self.listWidget_categories.setCurrentRow(0)
+
+    def init_segment_anything(self, model_name, reload=False):
+
+        if model_name == '':
+            self.use_segment_anything = False
+            for name, action in self.pths_actions.items():
+                action.setChecked(model_name == name)
+            return
+        model_path = os.path.join('segment_any', model_name)
+        if not os.path.exists(model_path):
+            QtWidgets.QMessageBox.warning(self, 'Warning',
+                                          'The checkpoint of [Segment anything] not existed. If you want use quick annotate, please download from {}'.format(
+                                              'https://github.com/facebookresearch/segment-anything#model-checkpoints'))
+            for name, action in self.pths_actions.items():
+                action.setChecked(model_name == name)
+            self.use_segment_anything = False
+            return
+
+        self.segany = SegAny(model_path)
+        self.use_segment_anything = True
+
+        self.status_bar.showMessage('Use the checkpoint named {}.'.format(model_name), 3000)
+        for name, action in self.pths_actions.items():
+            action.setChecked(model_name==name)
+        if self.use_segment_anything:
+            if self.segany.device != 'cpu':
+                if self.gpu_resource_thread is None:
+                    self.gpu_resource_thread = GPUResource_Thread()
+                    self.gpu_resource_thread.message.connect(self.labelGPUResource.setText)
+                    self.gpu_resource_thread.start()
+            else:
+                self.labelGPUResource.setText('cpu')
+        else:
+            self.labelGPUResource.setText('segment anything unused.')
+
+        if self.current_index is not None:
+            self.show_image(self.current_index)
 
     def open_image_dir(self):
         dir = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Open image directory')
@@ -570,9 +633,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionPrior_image.setEnabled(self.current_index != 0)
         self.actionNext_image.setEnabled(self.current_index != len(self.files_list) - 1)
 
-        pixmap = QtGui.QPixmap.fromImage(QtGui.QImage(os.path.join(self.files_root, self.files_list[self.current_index])))
-        self.pixmap = pixmap
-        self.scene.load_pixmap(pixmap)
+        file_path = os.path.join(self.files_root, self.files_list[self.current_index])
+        self.scene.load_image(file_path)
 
         # update files dock
         self.listWidget_files.setCurrentRow(self.current_index)
@@ -585,6 +647,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.load_anno()
         #
         self.actionCreate.setEnabled(True)
+        self.actionSegment_any.setEnabled(self.use_segment_anything)
         self.actionZoom_in.setEnabled(True)
         self.actionZoom_out.setEnabled(True)
         self.actionFit_window.setEnabled(True)
@@ -745,7 +808,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             checkbox.setChecked(check_state)
 
     def add_annotation_manually(self):
-        if self.pixmap is None:
+        if self.scene.image_datas is None:
             return
         self.add_annotation_dialog.init()
         self.add_annotation_dialog.show()
@@ -755,11 +818,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setting_dialog.show()
 
     def save(self):
-        if self.files_list and self.pixmap:
+        if self.files_list and self.scene.image_data is not None:
             annos = Annotations()
-            annos.width = self.pixmap.width()
-            annos.height = self.pixmap.height()
-            annos.depth = self.pixmap.depth()
+            h, w, c = self.scene.image_data.shape
+            annos.width = w
+            annos.height = h
+            annos.depth = c
             annos.image_path = os.path.join(self.files_root, self.files_list[self.current_index])
             for rect in self.scene.rects:
                 points = [v.pos() for v in rect.vertexs]
@@ -788,7 +852,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionOpen_label_dir.triggered.connect(self.open_label_dir)
         self.actionPrior_image.triggered.connect(self.prior_image)
         self.actionNext_image.triggered.connect(self.next_image)
-        self.actionCreate.triggered.connect(self.scene.start_draw)
+        self.actionCreate.triggered.connect(self.scene.start_rect)
+        self.actionSegment_any.triggered.connect(self.scene.start_segment_any)
+        self.actionFinish_draw.triggered.connect(self.scene.finish_draw)
         self.actionEdit.triggered.connect(self.scene.edit_rect)
         self.actionDelete.triggered.connect(self.scene.delete_rect)
         self.actionSave.triggered.connect(self.save)

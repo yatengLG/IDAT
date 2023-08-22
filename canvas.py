@@ -5,12 +5,18 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from rect import Rect
 from enum import Enum
 from typing import List
+import numpy as np
+from PIL import Image
+import cv2
 
-
-class DRAWMode(Enum):
+class Mode(Enum):
     VIEW = 0
     CREATE = 1
     EDIT = 2
+
+class DRAWMODE(Enum):
+    RECTANGLE = 0
+    SEGMENTANYTHING = 1
 
 class AnnotateMode(Enum):
     DETECT = 0
@@ -23,28 +29,34 @@ class Scene(QtWidgets.QGraphicsScene):
         self.mainwindow = mainwindow
         self.pixmap_item:QtWidgets.QGraphicsPixmapItem = None
         self.rects:List[Rect] = []
-        self.drawmode:DRAWMode = View
+        self.mode:Mode = Mode.VIEW
+        self.draw_mode:DRAWMODE = DRAWMODE.RECTANGLE
         self.current_rect:Rect = None
         self.leftpressed = False
+
+        self.image_data = None
+        self.mask_alpha = 0.8
+        self.click_points = []
+        self.click_points_mode = []
 
         self.guide_line_x:QtWidgets.QGraphicsLineItem = None
         self.guide_line_y:QtWidgets.QGraphicsLineItem = None
 
     def change_draw_to_create(self):
-        self.drawmode = DRAWMode.CREATE
+        self.mode = Mode.CREATE
         self.leftpressed = False
         if self.pixmap_item is not None:
             self.pixmap_item.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
             self.mainwindow.actionCache.setEnabled(True)
 
     def change_draw_to_edit(self):
-        self.drawmode = DRAWMode.EDIT
+        self.mode = Mode.EDIT
         self.leftpressed = False
         if self.pixmap_item is not None:
             self.pixmap_item.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
 
     def change_draw_to_view(self):
-        self.drawmode = DRAWMode.VIEW
+        self.mode = Mode.VIEW
         self.leftpressed = False
         # 移除辅助线
         if self.guide_line_x is not None and self.guide_line_y is not None:
@@ -58,6 +70,33 @@ class Scene(QtWidgets.QGraphicsScene):
             self.pixmap_item.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
             self.mainwindow.actionCache.setEnabled(False)
 
+    def load_image(self, file_path):
+        self.clear()
+        if self.mainwindow.use_segment_anything:
+            self.mainwindow.segany.reset_image()
+        self.image_data = np.array(Image.open(file_path))
+        print('load img :', self.image_data.shape)
+        if self.mainwindow.use_segment_anything:
+            if self.image_data.ndim == 3 and self.image_data.shape[-1] == 3:  # 三通道图
+                self.mainwindow.segany.set_image(self.image_data)
+            elif self.image_data.ndim == 2:  # 单通道图
+                self.image_data = self.image_data[:, :, np.newaxis]
+                self.image_data = np.repeat(self.image_data, 3, axis=2)  # 转换为三通道
+                self.mainwindow.segany.set_image(self.image_data)
+            else:
+                self.mainwindow.statusbar.showMessage(
+                    "Segment anything don't support the image with shape {} .".format(self.image_data.shape))
+
+        self.image_item = QtWidgets.QGraphicsPixmapItem()
+        self.image_item.setZValue(0)
+        self.addItem(self.image_item)
+        self.mask_item = QtWidgets.QGraphicsPixmapItem()
+        self.mask_item.setZValue(1)
+        self.addItem(self.mask_item)
+
+        pixmap = (QtGui.QPixmap(file_path))
+        self.load_pixmap(pixmap)
+
     def load_pixmap(self, pixmap):
 
         self.pixmap_item = QtWidgets.QGraphicsPixmapItem()
@@ -67,8 +106,17 @@ class Scene(QtWidgets.QGraphicsScene):
         self.setSceneRect(self.pixmap_item.boundingRect())
         self.change_draw_to_view()
 
+    def start_rect(self):
+        self.draw_mode = DRAWMODE.RECTANGLE
+        self.start_draw()
+
+    def start_segment_any(self):
+        self.draw_mode:DRAWMODE = DRAWMODE.SEGMENTANYTHING
+        self.mainwindow.actionFinish_draw.setEnabled(True)
+        self.start_draw()
+
     def start_draw(self):
-        if self.drawmode != DRAWMode.VIEW:
+        if self.mode != Mode.VIEW:
             return
         self.mainwindow.label_visiable_checkbox_click(False)
         self.change_draw_to_create()
@@ -84,12 +132,19 @@ class Scene(QtWidgets.QGraphicsScene):
         color = label_color.text()
 
         difficult = False
-        self.mainwindow.scene.current_rect.complete(category, color, difficult)
-        self.mainwindow.scene.rects.append(self.mainwindow.scene.current_rect)
-        self.mainwindow.dock_labels_add_label(self.mainwindow.scene.current_rect)
-        self.mainwindow.scene.current_rect = None
+        self.current_rect.complete(category, color, difficult)
+        self.rects.append(self.current_rect)
+        self.mainwindow.dock_labels_add_label(self.current_rect)
+        self.current_rect = None
         self.mainwindow.set_changed(True)
         self.mainwindow.label_visiable_checkbox_click(True)
+
+        self.mainwindow.actionFinish_draw.setEnabled(False)
+
+        # mask清空
+        self.click_points.clear()
+        self.click_points_mode.clear()
+        self.update_mask()
 
         self.change_draw_to_view()
 
@@ -98,6 +153,12 @@ class Scene(QtWidgets.QGraphicsScene):
             self.removeItem(self.current_rect)
             self.current_rect:Rect = None
         self.mainwindow.label_visiable_checkbox_click(True)
+
+        # mask清空
+        self.click_points.clear()
+        self.click_points_mode.clear()
+        self.update_mask()
+
         self.change_draw_to_view()
 
     def edit_rect(self):
@@ -131,20 +192,31 @@ class Scene(QtWidgets.QGraphicsScene):
         if pos.x() > self.width(): pos.setX(self.width())
         if pos.y() < 0: pos.setY(0)
         if pos.y() > self.height(): pos.setY(self.height())
+        print('mode:', self.mode)
+        print('draw_mode:', self.draw_mode)
+        if self.mode == Mode.CREATE:
+            if self.draw_mode == DRAWMODE.RECTANGLE:
+                if event.button() == QtCore.Qt.MouseButton.LeftButton:
+                    if self.leftpressed:
+                        self.current_rect.removePoint(len(self.current_rect.points) - 1)
+                        self.current_rect.addPoint(pos)
+                        self.finish_draw()
+                        self.leftpressed = False
+                    else:
+                        # 第一次点击
+                        self.current_rect.addPoint(pos)
+                        self.current_rect.addPoint(pos)
+                        self.leftpressed = True
+            elif self.draw_mode == DRAWMODE.SEGMENTANYTHING:
+                if event.button() == QtCore.Qt.MouseButton.LeftButton:
+                    self.click_points.append([pos.x(), pos.y()])
+                    self.click_points_mode.append(1)
+                elif event.button() == QtCore.Qt.MouseButton.RightButton:
+                    self.click_points.append([pos.x(), pos.y()])
+                    self.click_points_mode.append(0)
 
-        if event.button() == QtCore.Qt.MouseButton.LeftButton:
-            if self.drawmode == DRAWMode.CREATE:
-                # scenepos = event.scenePos()
-                if self.leftpressed:
-                    self.current_rect.removePoint(len(self.current_rect.points) - 1)
-                    self.current_rect.addPoint(pos)
-                    self.finish_draw()
-                    self.leftpressed = False
-                else:
-                    # 第一次点击
-                    self.current_rect.addPoint(pos)
-                    self.current_rect.addPoint(pos)
-                    self.leftpressed = True
+                self.update_mask()
+
         super(Scene, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
@@ -155,7 +227,7 @@ class Scene(QtWidgets.QGraphicsScene):
         if pos.y() < 0: pos.setY(0)
         if pos.y() > self.height(): pos.setY(self.height())
 
-        if self.drawmode == DRAWMode.CREATE:
+        if self.mode == Mode.CREATE and self.draw_mode == DRAWMODE.RECTANGLE:
             # 移除旧辅助线
             if self.guide_line_x is not None and self.guide_line_y is not None:
                 if self.guide_line_x in self.items():
@@ -178,6 +250,60 @@ class Scene(QtWidgets.QGraphicsScene):
 
         self.mainwindow.labelCoordinates.setText("({:.0f}, {:.0f})".format(pos.x(), pos.y()))
         super(Scene, self).mouseMoveEvent(event)
+
+    def update_mask(self):
+        if not self.mainwindow.use_segment_anything:
+            return
+        if self.image_data is None:
+            return
+        if not (self.image_data.ndim == 3 and self.image_data.shape[-1] == 3):
+            return
+        if len(self.click_points) > 0 and len(self.click_points_mode) > 0:
+            masks = self.mainwindow.segany.predict_with_point_prompt(self.click_points, self.click_points_mode)
+            self.masks = masks
+            color = np.array([0, 0, 255])
+            h, w = masks.shape[-2:]
+
+            l, t, r ,b = None, None, None, None
+            for i in range(h):
+                if t is None and np.any(masks[:, i, :]):
+                    t = i
+
+            for i in range(h-1, -1, -1):
+                if b is None and np.any(masks[:, i, :]):
+                    b = i
+
+            for i in range(w):
+                if l is None and np.any(masks[:, :, i]):
+                    l = i
+
+            for i in range(w-1, -1, -1):
+                if r is None and np.any(masks[:, :, i]):
+                    r = i
+            self.current_rect.points.clear()
+            self.current_rect.addPoint(QtCore.QPointF(l, t))
+            self.current_rect.addPoint(QtCore.QPointF(r, b))
+            self.current_rect.redraw()
+
+            mask_image = masks.reshape(h, w, 1) * color.reshape(1, 1, -1)
+            mask_image = mask_image.astype("uint8")
+            mask_image = cv2.cvtColor(mask_image, cv2.COLOR_BGR2RGB)
+            # 这里通过调整原始图像的权重self.mask_alpha，来调整mask的明显程度。
+            mask_image = cv2.addWeighted(self.image_data, self.mask_alpha, mask_image, 1, 0)
+            mask_image = QtGui.QImage(mask_image[:], mask_image.shape[1], mask_image.shape[0], mask_image.shape[1] * 3,
+                                      QtGui.QImage.Format_RGB888)
+            mask_pixmap = QtGui.QPixmap(mask_image)
+            self.mask_item.setPixmap(mask_pixmap)
+
+
+        else:
+            mask_image = np.zeros(self.image_data.shape, dtype=np.uint8)
+            mask_image = cv2.addWeighted(self.image_data, 1, mask_image, 0, 0)
+            mask_image = QtGui.QImage(mask_image[:], mask_image.shape[1], mask_image.shape[0], mask_image.shape[1] * 3,
+                                      QtGui.QImage.Format_RGB888)
+            mask_pixmap = QtGui.QPixmap(mask_image)
+            self.mask_item.setPixmap(mask_pixmap)
+
 
 
 class View(QtWidgets.QGraphicsView):

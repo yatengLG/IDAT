@@ -78,22 +78,57 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionSegment_any"/>
     <addaction name="actionCreate"/>
+    <addaction name="separator"/>
+    <addaction name="actionFinish_draw"/>
     <addaction name="actionCache"/>
+    <addaction name="separator"/>
     <addaction name="actionEdit"/>
     <addaction name="actionDelete"/>
     <addaction name="actionSave"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
     <property name="title">
      <string>Help</string>
     </property>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="font">
+      <font>
+       <family>Times New Roman</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../icon.qrc">
+       <normaloff>:/icons/icons/翻译_translate.svg</normaloff>:/icons/icons/翻译_translate.svg</iconset>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="action_2"/>
+     <addaction name="actionEnglish"/>
+    </widget>
+    <addaction name="menuLanguage"/>
     <addaction name="actionShortcut"/>
     <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuSAM_model">
+    <property name="title">
+     <string>SAM</string>
+    </property>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
+   <addaction name="menuSAM_model"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
@@ -124,7 +159,11 @@
    <addaction name="actionPrior_image"/>
    <addaction name="actionNext_image"/>
    <addaction name="separator"/>
+   <addaction name="actionSegment_any"/>
    <addaction name="actionCreate"/>
+   <addaction name="actionFinish_draw"/>
+   <addaction name="actionCache"/>
+   <addaction name="separator"/>
    <addaction name="actionEdit"/>
    <addaction name="actionDelete"/>
    <addaction name="actionSave"/>
@@ -158,16 +197,16 @@
       <number>6</number>
      </property>
      <property name="leftMargin">
-      <number>3</number>
+      <number>9</number>
      </property>
      <property name="topMargin">
-      <number>3</number>
+      <number>9</number>
      </property>
      <property name="rightMargin">
-      <number>3</number>
+      <number>9</number>
      </property>
      <property name="bottomMargin">
-      <number>3</number>
+      <number>9</number>
      </property>
      <item>
       <widget class="QWidget" name="widget" native="true">
@@ -428,9 +467,6 @@
      <pointsize>12</pointsize>
     </font>
    </property>
-   <property name="shortcut">
-    <string>E</string>
-   </property>
   </action>
   <action name="actionDelete">
    <property name="icon">
@@ -577,6 +613,52 @@
      <family>Times New Roman</family>
      <pointsize>12</pointsize>
     </font>
+   </property>
+  </action>
+  <action name="actionSegment_any">
+   <property name="icon">
+    <iconset resource="../icon.qrc">
+     <normaloff>:/icons/icons/M_Favicon.ico</normaloff>:/icons/icons/M_Favicon.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Segment any</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>Q</string>
+   </property>
+  </action>
+  <action name="actionFinish_draw">
+   <property name="icon">
+    <iconset resource="../icon.qrc">
+     <normaloff>:/icons/icons/校验_check-one.svg</normaloff>:/icons/icons/校验_check-one.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Finish draw</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>E</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>中文</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>English</string>
    </property>
   </action>
  </widget>
