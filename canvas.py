@@ -75,7 +75,6 @@ class Scene(QtWidgets.QGraphicsScene):
         if self.mainwindow.use_segment_anything:
             self.mainwindow.segany.reset_image()
         self.image_data = np.array(Image.open(file_path))
-        print('load img :', self.image_data.shape)
         if self.mainwindow.use_segment_anything:
             if self.image_data.ndim == 3 and self.image_data.shape[-1] == 3:  # 三通道图
                 self.mainwindow.segany.set_image(self.image_data)
@@ -192,8 +191,6 @@ class Scene(QtWidgets.QGraphicsScene):
         if pos.x() > self.width(): pos.setX(self.width())
         if pos.y() < 0: pos.setY(0)
         if pos.y() > self.height(): pos.setY(self.height())
-        print('mode:', self.mode)
-        print('draw_mode:', self.draw_mode)
         if self.mode == Mode.CREATE:
             if self.draw_mode == DRAWMODE.RECTANGLE:
                 if event.button() == QtCore.Qt.MouseButton.LeftButton:
