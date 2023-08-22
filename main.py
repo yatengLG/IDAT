@@ -464,6 +464,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.use_segment_anything = False
         self.gpu_resource_thread = None
 
+        self.trans = QtCore.QTranslator()
+
         self.init_gui()
         self.connect()
 
@@ -474,7 +476,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.load_category()
 
     def init_gui(self):
-        self.setWindowTitle('LG Annotation Tool')
+        self.setWindowTitle('IDAT')
         self.actionPrior_image.setEnabled(False)
         self.actionNext_image.setEnabled(False)
         self.actionCreate.setEnabled(False)
@@ -577,6 +579,29 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if self.current_index is not None:
             self.show_image(self.current_index)
+
+    def translate(self, language='zh'):
+        if language == 'zh':
+            self.trans.load('ui/zh_CN')
+        else:
+            self.trans.load('ui/en')
+        self.actionChinese.setChecked(language=='zh')
+        self.actionEnglish.setChecked(language=='en')
+        _app = QtWidgets.QApplication.instance()
+        _app.installTranslator(self.trans)
+        self.retranslateUi(self)
+        self.about_dialog.retranslateUi(self.about_dialog)
+        self.add_annotation_dialog.retranslateUi(self.add_annotation_dialog)
+        self.choice_label_dialog.retranslateUi(self.choice_label_dialog)
+        self.setting_dialog.retranslateUi(self.setting_dialog)
+        self.shortcut_dialog.retranslateUi(self.shortcut_dialog)
+        self.edit_label_dialog.retranslateUi(self.edit_label_dialog)
+
+    def translate_to_chinese(self):
+        self.translate('zh')
+
+    def translate_to_english(self):
+        self.translate('en')
 
     def open_image_dir(self):
         dir = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Open image directory')
@@ -808,7 +833,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             checkbox.setChecked(check_state)
 
     def add_annotation_manually(self):
-        if self.scene.image_datas is None:
+        if self.scene.image_data is None:
             return
         self.add_annotation_dialog.init()
         self.add_annotation_dialog.show()
@@ -867,6 +892,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionShortcut.triggered.connect(self.shortcut_dialog.show)
         self.actionAbout.triggered.connect(self.about_dialog.show)
         self.actionExit.triggered.connect(self.close)
+
+        self.actionChinese.triggered.connect(self.translate_to_chinese)
+        self.actionEnglish.triggered.connect(self.translate_to_english)
 
         self.listWidget_files.doubleClicked.connect(self.dock_files_click)
         self.lineEdit_jump.returnPressed.connect(self.jump_to)

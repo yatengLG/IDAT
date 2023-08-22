@@ -113,7 +113,7 @@
        <normaloff>:/icons/icons/翻译_translate.svg</normaloff>:/icons/icons/翻译_translate.svg</iconset>
      </property>
      <addaction name="separator"/>
-     <addaction name="action_2"/>
+     <addaction name="actionChinese"/>
      <addaction name="actionEnglish"/>
     </widget>
     <addaction name="menuLanguage"/>
@@ -651,7 +651,7 @@
     <string>E</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="actionChinese">
    <property name="text">
     <string>中文</string>
    </property>
