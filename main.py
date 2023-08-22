@@ -453,6 +453,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.category_tuples = []
         self.is_changed = False
 
+        self.trans = QtCore.QTranslator()
+
         self.init_gui()
         self.connect()
 
@@ -474,6 +476,29 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionZoom_in.setEnabled(False)
         self.actionZoom_out.setEnabled(False)
         self.actionFit_window.setEnabled(False)
+
+    def translate(self, language='zh'):
+        if language == 'zh':
+            self.trans.load('ui/zh_CN')
+        else:
+            self.trans.load('ui/en')
+        self.actionChinese.setChecked(language=='zh')
+        self.actionEnglish.setChecked(language=='en')
+        _app = QtWidgets.QApplication.instance()
+        _app.installTranslator(self.trans)
+        self.retranslateUi(self)
+        self.about_dialog.retranslateUi(self.about_dialog)
+        self.add_annotation_dialog.retranslateUi(self.add_annotation_dialog)
+        self.choice_label_dialog.retranslateUi(self.choice_label_dialog)
+        self.setting_dialog.retranslateUi(self.setting_dialog)
+        self.shortcut_dialog.retranslateUi(self.shortcut_dialog)
+        self.edit_label_dialog.retranslateUi(self.edit_label_dialog)
+
+    def translate_to_chinese(self):
+        self.translate('zh')
+
+    def translate_to_english(self):
+        self.translate('en')
 
     def load_category(self):
         self.listWidget_categories.clear()
@@ -801,6 +826,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionShortcut.triggered.connect(self.shortcut_dialog.show)
         self.actionAbout.triggered.connect(self.about_dialog.show)
         self.actionExit.triggered.connect(self.close)
+
+        self.actionChinese.triggered.connect(self.translate_to_chinese)
+        self.actionEnglish.triggered.connect(self.translate_to_english)
 
         self.listWidget_files.doubleClicked.connect(self.dock_files_click)
         self.lineEdit_jump.returnPressed.connect(self.jump_to)

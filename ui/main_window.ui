@@ -88,6 +88,24 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="font">
+      <font>
+       <family>Times New Roman</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../icon.qrc">
+       <normaloff>:/icons/icons/翻译_translate.svg</normaloff>:/icons/icons/翻译_translate.svg</iconset>
+     </property>
+     <addaction name="actionChinese"/>
+     <addaction name="actionEnglish"/>
+    </widget>
+    <addaction name="menuLanguage"/>
     <addaction name="actionShortcut"/>
     <addaction name="actionAbout"/>
    </widget>
@@ -577,6 +595,16 @@
      <family>Times New Roman</family>
      <pointsize>12</pointsize>
     </font>
+   </property>
+  </action>
+  <action name="actionChinese">
+   <property name="text">
+    <string>中文</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>English</string>
    </property>
   </action>
  </widget>
