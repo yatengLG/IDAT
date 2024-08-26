@@ -2,7 +2,7 @@
 # @Author  : LG
 
 from PyQt5 import QtCore, QtWidgets, QtGui
-from rect import Rect
+from IDAT.rect import Rect
 from enum import Enum
 from typing import List
 
@@ -68,6 +68,9 @@ class Scene(QtWidgets.QGraphicsScene):
         self.change_draw_to_view()
 
     def start_draw(self):
+        if len(self.mainwindow.listWidget_categories) < 1:
+            QtWidgets.QMessageBox.warning(self.mainwindow, 'Warning', 'The category list is empty.\nSet categorys before labeling.')
+            return
         if self.drawmode != DRAWMode.VIEW:
             return
         self.mainwindow.label_visiable_checkbox_click(False)

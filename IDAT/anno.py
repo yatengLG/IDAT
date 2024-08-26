@@ -123,5 +123,12 @@ class Annotations(object):
             object.append(bndbox)
             annotation.append(object)
 
-        tree.write(xml_path, encoding='utf-8', xml_declaration=True)
+        # tree.write(xml_path, encoding='utf-8', xml_declaration=True)
+        xml_string = ET.tostring(annotation, encoding='utf-8', method='xml')
+        print(xml_string)
+        from xml.dom import minidom
+        xml_pretty = minidom.parseString(xml_string).toprettyxml(indent='    ')
+        # print(xml_pretty)
+        with open(xml_path, 'w') as f:
+            f.write(xml_pretty)
         return True

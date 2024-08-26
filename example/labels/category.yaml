@@ -1,0 +1,11 @@
+label:
+- color: '#aa0000'
+  name: cup
+- color: '#008000'
+  name: knife
+- color: '#808000'
+  name: person
+- color: '#000080'
+  name: plate
+- color: '#800080'
+  name: table

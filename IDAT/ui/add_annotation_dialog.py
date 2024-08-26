@@ -88,4 +88,3 @@ class Ui_dialog_add_annotation(object):
         self.checkBox_difficult.setText(_translate("dialog_add_annotation", "difficult"))
         self.pushButton_cache.setText(_translate("dialog_add_annotation", "cache"))
         self.pushButton_apply.setText(_translate("dialog_add_annotation", "apply"))
-import icon_rc

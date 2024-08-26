@@ -117,4 +117,3 @@ class Ui_Dialog_Setting(object):
         self.pushButton_export.setText(_translate("Dialog_Setting", "Export"))
         self.pushButton_cache.setText(_translate("Dialog_Setting", "Cache"))
         self.pushButton_apply.setText(_translate("Dialog_Setting", "Apply"))
-import icon_rc

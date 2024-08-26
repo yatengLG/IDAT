@@ -1,2 +1,35 @@
-<?xml version='1.0' encoding='utf-8'?>
-<annotation><folder>/home/super/PycharmProjects/IDAT/example/images</folder><filename>000000000872.jpg</filename><explain>Build by LG Annotation Tool v1.0</explain><size><width>621</width><height>640</height><depth>32</depth></size><object><name>person</name><pose>Unspecified</pose><truncated>0</truncated><difficult>0</difficult><bndbox><xmin>162</xmin><ymin>130</ymin><xmax>424</xmax><ymax>610</ymax></bndbox></object><object><name>person</name><pose>Unspecified</pose><truncated>0</truncated><difficult>0</difficult><bndbox><xmin>148</xmin><ymin>102</ymin><xmax>439</xmax><ymax>557</ymax></bndbox></object></annotation>
+<?xml version="1.0" ?>
+<annotation>
+    <folder>/home/lg/PycharmProjects/IDAT/example/images</folder>
+    <filename>000000000872.jpg</filename>
+    <explain>Build by IDAT v1.0</explain>
+    <size>
+        <width>621</width>
+        <height>640</height>
+        <depth>32</depth>
+    </size>
+    <object>
+        <name>person</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>162</xmin>
+            <ymin>130</ymin>
+            <xmax>424</xmax>
+            <ymax>610</ymax>
+        </bndbox>
+    </object>
+    <object>
+        <name>person</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>148</xmin>
+            <ymin>102</ymin>
+            <xmax>439</xmax>
+            <ymax>557</ymax>
+        </bndbox>
+    </object>
+</annotation>

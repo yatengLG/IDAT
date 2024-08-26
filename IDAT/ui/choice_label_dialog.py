@@ -76,4 +76,3 @@ class Ui_Dialog_Choice_Label(object):
         self.checkBox_difficult.setText(_translate("Dialog_Choice_Label", "difficult"))
         self.pushButton_cache.setText(_translate("Dialog_Choice_Label", "cache"))
         self.pushButton_apply.setText(_translate("Dialog_Choice_Label", "apply"))
-import icon_rc

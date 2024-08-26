@@ -168,4 +168,3 @@ class Ui_Dialog_Shortcut(object):
         self.label_19.setText(_translate("Dialog_Shortcut", "A"))
         self.label_17.setText(_translate("Dialog_Shortcut", "Next image"))
         self.label_16.setText(_translate("Dialog_Shortcut", "D"))
-import icon_rc

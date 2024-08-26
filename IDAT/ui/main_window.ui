@@ -44,7 +44,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>24</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -52,6 +52,9 @@
      <font>
       <family>Times New Roman</family>
       <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="title">
@@ -93,6 +96,9 @@
       <font>
        <family>Times New Roman</family>
        <pointsize>12</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
       </font>
      </property>
      <property name="title">
@@ -156,6 +162,9 @@
     <font>
      <family>Times New Roman</family>
      <pointsize>12</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="contextMenuPolicy">
@@ -243,6 +252,7 @@
         <widget class="QLineEdit" name="lineEdit_jump">
          <property name="font">
           <font>
+           <family>Times New Roman</family>
            <pointsize>12</pointsize>
            <weight>50</weight>
            <italic>false</italic>
@@ -357,7 +367,7 @@
   <action name="actionZoom_in">
    <property name="icon">
     <iconset resource="../icon.qrc">
-     <normaloff>:/icons/icons/缩小_zoom-out.svg</normaloff>:/icons/icons/缩小_zoom-out.svg</iconset>
+     <normaloff>:/icons/icons/放大_zoom-in.svg</normaloff>:/icons/icons/放大_zoom-in.svg</iconset>
    </property>
    <property name="text">
     <string>Zoom in </string>
@@ -372,7 +382,7 @@
   <action name="actionZoom_out">
    <property name="icon">
     <iconset resource="../icon.qrc">
-     <normaloff>:/icons/icons/放大_zoom-in.svg</normaloff>:/icons/icons/放大_zoom-in.svg</iconset>
+     <normaloff>:/icons/icons/缩小_zoom-out.svg</normaloff>:/icons/icons/缩小_zoom-out.svg</iconset>
    </property>
    <property name="text">
     <string>Zoom out</string>
