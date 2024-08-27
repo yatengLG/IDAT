@@ -1,0 +1,3 @@
+imgviz
+pyqt5
+pyyaml
