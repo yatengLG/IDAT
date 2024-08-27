@@ -478,7 +478,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.load_category()
 
     def init_gui(self):
-        self.setWindowTitle('LG Annotation Tool')
+        self.setWindowTitle('IDAT')
         self.actionPrior_image.setEnabled(False)
         self.actionNext_image.setEnabled(False)
         self.actionCreate.setEnabled(False)
