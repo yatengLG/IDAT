@@ -179,6 +179,10 @@ class AboutDialog(QtWidgets.QDialog, Ui_Dialog_About):
         super(AboutDialog, self).__init__(parent)
         self.setupUi(self)
         self.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
+        try:
+            from IDAT import __version__
+            self.label_version.setText('v'+ __version__)
+        except: pass
 
 class ChoiceLabelDialog(QtWidgets.QDialog, Ui_Dialog_Choice_Label):
     def __init__(self, parent, mainwindow):
