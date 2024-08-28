@@ -633,6 +633,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.scene.rects.clear()
         self.set_changed(False)
         self.checkBox_visiable.setChecked(True)
+        self.actionVisible.setChecked(True)
         self.listWidget_labels.clear()
 
         if len(self.files_list) == 0:
@@ -816,6 +817,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             widget = self.listWidget_labels.itemWidget(item)
             checkbox = widget.findChild(QtWidgets.QCheckBox, 'checkbox')
             checkbox.setChecked(check_state)
+        self.checkBox_visiable.setChecked(check_state)
 
     def add_annotation_manually(self):
         if self.pixmap is None:
@@ -882,6 +884,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_jump.returnPressed.connect(self.jump_to)
         self.listWidget_labels.itemSelectionChanged.connect(self.dock_labels_select_change)
         self.listWidget_labels.doubleClicked.connect(self.dock_labels_double_click)
+        self.actionVisible.triggered.connect(self.label_visiable_checkbox_click)
         self.checkBox_visiable.clicked.connect(self.label_visiable_checkbox_click)
         self.pushButton_add_manually.clicked.connect(self.add_annotation_manually)
 

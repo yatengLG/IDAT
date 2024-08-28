@@ -76,6 +76,7 @@
     <addaction name="actionFit_window"/>
     <addaction name="actionZoom_in"/>
     <addaction name="actionZoom_out"/>
+    <addaction name="actionVisible"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -156,6 +157,7 @@
    <addaction name="actionFit_window"/>
    <addaction name="actionZoom_in"/>
    <addaction name="actionZoom_out"/>
+   <addaction name="actionVisible"/>
   </widget>
   <widget class="QDockWidget" name="Labels">
    <property name="font">
@@ -615,6 +617,27 @@
   <action name="actionEnglish">
    <property name="text">
     <string>English</string>
+   </property>
+  </action>
+  <action name="actionVisible">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../icon.qrc">
+     <normaloff>:/icons/icons/眼睛_eyes.svg</normaloff>:/icons/icons/眼睛_eyes.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Visible</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="shortcut">
+    <string>V</string>
    </property>
   </action>
  </widget>
